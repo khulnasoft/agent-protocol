@@ -19,7 +19,7 @@ import json
 
 
 from typing import List
-from pydantic import BaseModel, Field, conlist
+from pydantic import BaseModel, ConfigDict, Field, conlist
 from agent_protocol_client.models.artifact import Artifact
 from agent_protocol_client.models.pagination import Pagination
 
@@ -33,15 +33,12 @@ class TaskArtifactsListResponse(BaseModel):
     pagination: Pagination = Field(...)
     __properties = ["artifacts", "pagination"]
 
-    class Config:
-        """Pydantic configuration"""
-
-        allow_population_by_field_name = True
-        validate_assignment = True
+    model_config = ConfigDict(populate_by_name=True, validate_assignment=True)
+    """Pydantic configuration"""
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
-        return pprint.pformat(self.dict(by_alias=True))
+        return pprint.pformat(self.model_dump(by_alias=True))
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
@@ -54,7 +51,7 @@ class TaskArtifactsListResponse(BaseModel):
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
+        _dict = self.model_dump(by_alias=True, exclude={}, exclude_none=True)
         # override the default output from pydantic by calling `to_dict()` of each item in artifacts (list)
         _items = []
         if self.artifacts:
@@ -74,9 +71,9 @@ class TaskArtifactsListResponse(BaseModel):
             return None
 
         if not isinstance(obj, dict):
-            return TaskArtifactsListResponse.parse_obj(obj)
+            return TaskArtifactsListResponse.model_validate(obj)
 
-        _obj = TaskArtifactsListResponse.parse_obj(
+        _obj = TaskArtifactsListResponse.model_validate(
             {
                 "artifacts": [
                     Artifact.from_dict(_item) for _item in obj.get("artifacts")

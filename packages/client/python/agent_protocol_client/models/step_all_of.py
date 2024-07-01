@@ -19,7 +19,7 @@ import json
 
 
 from typing import Any, List, Optional
-from pydantic import BaseModel, Field, StrictBool, StrictStr, conlist, validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, conlist, field_validator
 from agent_protocol_client.models.artifact import Artifact
 
 
@@ -56,22 +56,19 @@ class StepAllOf(BaseModel):
         "is_last",
     ]
 
-    @validator("status")
+    @field_validator("status")
     def status_validate_enum(cls, value):
         """Validates the enum"""
         if value not in ("created", "completed"):
             raise ValueError("must be one of enum values ('created', 'completed')")
         return value
 
-    class Config:
-        """Pydantic configuration"""
-
-        allow_population_by_field_name = True
-        validate_assignment = True
+    model_config = ConfigDict(populate_by_name=True, validate_assignment=True)
+    """Pydantic configuration"""
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
-        return pprint.pformat(self.dict(by_alias=True))
+        return pprint.pformat(self.model_dump(by_alias=True))
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
@@ -84,7 +81,7 @@ class StepAllOf(BaseModel):
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
+        _dict = self.model_dump(by_alias=True, exclude={}, exclude_none=True)
         # override the default output from pydantic by calling `to_dict()` of each item in artifacts (list)
         _items = []
         if self.artifacts:
@@ -93,10 +90,10 @@ class StepAllOf(BaseModel):
                     _items.append(_item.to_dict())
             _dict["artifacts"] = _items
         # set to None if additional_output (nullable) is None
-        # and __fields_set__ contains the field
+        # and model_fields_set contains the field
         if (
             self.additional_output is None
-            and "additional_output" in self.__fields_set__
+            and "additional_output" in self.model_fields_set
         ):
             _dict["additional_output"] = None
 
@@ -109,9 +106,9 @@ class StepAllOf(BaseModel):
             return None
 
         if not isinstance(obj, dict):
-            return StepAllOf.parse_obj(obj)
+            return StepAllOf.model_validate(obj)
 
-        _obj = StepAllOf.parse_obj(
+        _obj = StepAllOf.model_validate(
             {
                 "task_id": obj.get("task_id"),
                 "step_id": obj.get("step_id"),

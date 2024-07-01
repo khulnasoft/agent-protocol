@@ -19,7 +19,7 @@ import json
 
 
 from typing import Any, Dict, Optional
-from pydantic import BaseModel, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 
 
 class StepRequestBody(BaseModel):
@@ -33,15 +33,12 @@ class StepRequestBody(BaseModel):
     )
     __properties = ["input", "additional_input"]
 
-    class Config:
-        """Pydantic configuration"""
-
-        allow_population_by_field_name = True
-        validate_assignment = True
+    model_config = ConfigDict(populate_by_name=True, validate_assignment=True)
+    """Pydantic configuration"""
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
-        return pprint.pformat(self.dict(by_alias=True))
+        return pprint.pformat(self.model_dump(by_alias=True))
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
@@ -54,10 +51,10 @@ class StepRequestBody(BaseModel):
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
+        _dict = self.model_dump(by_alias=True, exclude={}, exclude_none=True)
         # set to None if input (nullable) is None
-        # and __fields_set__ contains the field
-        if self.input is None and "input" in self.__fields_set__:
+        # and model_fields_set contains the field
+        if self.input is None and "input" in self.model_fields_set:
             _dict["input"] = None
 
         return _dict
@@ -69,9 +66,9 @@ class StepRequestBody(BaseModel):
             return None
 
         if not isinstance(obj, dict):
-            return StepRequestBody.parse_obj(obj)
+            return StepRequestBody.model_validate(obj)
 
-        _obj = StepRequestBody.parse_obj(
+        _obj = StepRequestBody.model_validate(
             {"input": obj.get("input"), "additional_input": obj.get("additional_input")}
         )
         return _obj

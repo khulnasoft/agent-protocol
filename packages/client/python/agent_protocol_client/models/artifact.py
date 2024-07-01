@@ -19,7 +19,7 @@ import json
 
 
 from typing import Optional
-from pydantic import BaseModel, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 
 
 class Artifact(BaseModel):
@@ -37,15 +37,12 @@ class Artifact(BaseModel):
     )
     __properties = ["artifact_id", "agent_created", "file_name", "relative_path"]
 
-    class Config:
-        """Pydantic configuration"""
-
-        allow_population_by_field_name = True
-        validate_assignment = True
+    model_config = ConfigDict(populate_by_name=True, validate_assignment=True)
+    """Pydantic configuration"""
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
-        return pprint.pformat(self.dict(by_alias=True))
+        return pprint.pformat(self.model_dump(by_alias=True))
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
@@ -58,10 +55,10 @@ class Artifact(BaseModel):
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
+        _dict = self.model_dump(by_alias=True, exclude={}, exclude_none=True)
         # set to None if relative_path (nullable) is None
-        # and __fields_set__ contains the field
-        if self.relative_path is None and "relative_path" in self.__fields_set__:
+        # and model_fields_set contains the field
+        if self.relative_path is None and "relative_path" in self.model_fields_set:
             _dict["relative_path"] = None
 
         return _dict
@@ -73,9 +70,9 @@ class Artifact(BaseModel):
             return None
 
         if not isinstance(obj, dict):
-            return Artifact.parse_obj(obj)
+            return Artifact.model_validate(obj)
 
-        _obj = Artifact.parse_obj(
+        _obj = Artifact.model_validate(
             {
                 "artifact_id": obj.get("artifact_id"),
                 "agent_created": obj.get("agent_created"),

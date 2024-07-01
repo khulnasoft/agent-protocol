@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 
-from pydantic import BaseModel, Field, StrictInt
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
 
 
 class Pagination(BaseModel):
@@ -32,15 +32,12 @@ class Pagination(BaseModel):
     page_size: StrictInt = Field(..., description="Number of items per page.")
     __properties = ["total_items", "total_pages", "current_page", "page_size"]
 
-    class Config:
-        """Pydantic configuration"""
-
-        allow_population_by_field_name = True
-        validate_assignment = True
+    model_config = ConfigDict(populate_by_name=True, validate_assignment=True)
+    """Pydantic configuration"""
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
-        return pprint.pformat(self.dict(by_alias=True))
+        return pprint.pformat(self.model_dump(by_alias=True))
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
@@ -53,7 +50,7 @@ class Pagination(BaseModel):
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
+        _dict = self.model_dump(by_alias=True, exclude={}, exclude_none=True)
         return _dict
 
     @classmethod
@@ -63,9 +60,9 @@ class Pagination(BaseModel):
             return None
 
         if not isinstance(obj, dict):
-            return Pagination.parse_obj(obj)
+            return Pagination.model_validate(obj)
 
-        _obj = Pagination.parse_obj(
+        _obj = Pagination.model_validate(
             {
                 "total_items": obj.get("total_items"),
                 "total_pages": obj.get("total_pages"),

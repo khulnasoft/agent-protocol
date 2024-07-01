@@ -19,7 +19,7 @@ import json
 
 
 from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, Field, StrictBool, StrictStr, conlist, validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, conlist, field_validator
 from agent_protocol_client.models.artifact import Artifact
 
 
@@ -62,7 +62,7 @@ class Step(BaseModel):
         "is_last",
     ]
 
-    @validator("status")
+    @field_validator("status")
     def status_validate_enum(cls, value):
         """Validates the enum"""
         if value not in ("created", "running", "completed"):
@@ -71,15 +71,12 @@ class Step(BaseModel):
             )
         return value
 
-    class Config:
-        """Pydantic configuration"""
-
-        allow_population_by_field_name = True
-        validate_assignment = True
+    model_config = ConfigDict(populate_by_name=True, validate_assignment=True)
+    """Pydantic configuration"""
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
-        return pprint.pformat(self.dict(by_alias=True))
+        return pprint.pformat(self.model_dump(by_alias=True))
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
@@ -92,7 +89,7 @@ class Step(BaseModel):
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
+        _dict = self.model_dump(by_alias=True, exclude={}, exclude_none=True)
         # override the default output from pydantic by calling `to_dict()` of each item in artifacts (list)
         _items = []
         if self.artifacts:
@@ -101,25 +98,25 @@ class Step(BaseModel):
                     _items.append(_item.to_dict())
             _dict["artifacts"] = _items
         # set to None if input (nullable) is None
-        # and __fields_set__ contains the field
-        if self.input is None and "input" in self.__fields_set__:
+        # and model_fields_set contains the field
+        if self.input is None and "input" in self.model_fields_set:
             _dict["input"] = None
 
         # set to None if name (nullable) is None
-        # and __fields_set__ contains the field
-        if self.name is None and "name" in self.__fields_set__:
+        # and model_fields_set contains the field
+        if self.name is None and "name" in self.model_fields_set:
             _dict["name"] = None
 
         # set to None if output (nullable) is None
-        # and __fields_set__ contains the field
-        if self.output is None and "output" in self.__fields_set__:
+        # and model_fields_set contains the field
+        if self.output is None and "output" in self.model_fields_set:
             _dict["output"] = None
 
         # set to None if additional_output (nullable) is None
-        # and __fields_set__ contains the field
+        # and model_fields_set contains the field
         if (
             self.additional_output is None
-            and "additional_output" in self.__fields_set__
+            and "additional_output" in self.model_fields_set
         ):
             _dict["additional_output"] = None
 
@@ -132,9 +129,9 @@ class Step(BaseModel):
             return None
 
         if not isinstance(obj, dict):
-            return Step.parse_obj(obj)
+            return Step.model_validate(obj)
 
-        _obj = Step.parse_obj(
+        _obj = Step.model_validate(
             {
                 "input": obj.get("input"),
                 "additional_input": obj.get("additional_input"),

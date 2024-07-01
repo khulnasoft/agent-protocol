@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 
-from pydantic import BaseModel, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 
 
 class GetAgentTask404Response(BaseModel):
@@ -31,15 +31,12 @@ class GetAgentTask404Response(BaseModel):
     )
     __properties = ["message"]
 
-    class Config:
-        """Pydantic configuration"""
-
-        allow_population_by_field_name = True
-        validate_assignment = True
+    model_config = ConfigDict(populate_by_name=True, validate_assignment=True)
+    """Pydantic configuration"""
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
-        return pprint.pformat(self.dict(by_alias=True))
+        return pprint.pformat(self.model_dump(by_alias=True))
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
@@ -52,7 +49,7 @@ class GetAgentTask404Response(BaseModel):
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
+        _dict = self.model_dump(by_alias=True, exclude={}, exclude_none=True)
         return _dict
 
     @classmethod
@@ -62,7 +59,7 @@ class GetAgentTask404Response(BaseModel):
             return None
 
         if not isinstance(obj, dict):
-            return GetAgentTask404Response.parse_obj(obj)
+            return GetAgentTask404Response.model_validate(obj)
 
-        _obj = GetAgentTask404Response.parse_obj({"message": obj.get("message")})
+        _obj = GetAgentTask404Response.model_validate({"message": obj.get("message")})
         return _obj

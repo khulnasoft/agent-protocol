@@ -19,7 +19,7 @@ import json
 
 
 from typing import Any, List, Optional
-from pydantic import BaseModel, Field, StrictBool, conlist
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, conlist
 
 
 class StepResult(BaseModel):
@@ -39,15 +39,12 @@ class StepResult(BaseModel):
     )
     __properties = ["output", "artifacts", "is_last"]
 
-    class Config:
-        """Pydantic configuration"""
-
-        allow_population_by_field_name = True
-        validate_assignment = True
+    model_config = ConfigDict(populate_by_name=True, validate_assignment=True)
+    """Pydantic configuration"""
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
-        return pprint.pformat(self.dict(by_alias=True))
+        return pprint.pformat(self.model_dump(by_alias=True))
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
@@ -60,10 +57,10 @@ class StepResult(BaseModel):
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
+        _dict = self.model_dump(by_alias=True, exclude={}, exclude_none=True)
         # set to None if output (nullable) is None
-        # and __fields_set__ contains the field
-        if self.output is None and "output" in self.__fields_set__:
+        # and model_fields_set contains the field
+        if self.output is None and "output" in self.model_fields_set:
             _dict["output"] = None
 
         return _dict
@@ -75,9 +72,9 @@ class StepResult(BaseModel):
             return None
 
         if not isinstance(obj, dict):
-            return StepResult.parse_obj(obj)
+            return StepResult.model_validate(obj)
 
-        _obj = StepResult.parse_obj(
+        _obj = StepResult.model_validate(
             {
                 "output": obj.get("output"),
                 "artifacts": obj.get("artifacts"),

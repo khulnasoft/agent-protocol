@@ -19,7 +19,7 @@ import json
 
 
 from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, Field, StrictStr, conlist
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, conlist
 from agent_protocol_client.models.artifact import Artifact
 
 
@@ -38,15 +38,12 @@ class Task(BaseModel):
     )
     __properties = ["input", "additional_input", "task_id", "artifacts"]
 
-    class Config:
-        """Pydantic configuration"""
-
-        allow_population_by_field_name = True
-        validate_assignment = True
+    model_config = ConfigDict(populate_by_name=True, validate_assignment=True)
+    """Pydantic configuration"""
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
-        return pprint.pformat(self.dict(by_alias=True))
+        return pprint.pformat(self.model_dump(by_alias=True))
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
@@ -59,7 +56,7 @@ class Task(BaseModel):
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
+        _dict = self.model_dump(by_alias=True, exclude={}, exclude_none=True)
         # override the default output from pydantic by calling `to_dict()` of each item in artifacts (list)
         _items = []
         if self.artifacts:
@@ -68,8 +65,8 @@ class Task(BaseModel):
                     _items.append(_item.to_dict())
             _dict["artifacts"] = _items
         # set to None if input (nullable) is None
-        # and __fields_set__ contains the field
-        if self.input is None and "input" in self.__fields_set__:
+        # and model_fields_set contains the field
+        if self.input is None and "input" in self.model_fields_set:
             _dict["input"] = None
 
         return _dict
@@ -81,9 +78,9 @@ class Task(BaseModel):
             return None
 
         if not isinstance(obj, dict):
-            return Task.parse_obj(obj)
+            return Task.model_validate(obj)
 
-        _obj = Task.parse_obj(
+        _obj = Task.model_validate(
             {
                 "input": obj.get("input"),
                 "additional_input": obj.get("additional_input"),

@@ -16,7 +16,7 @@ import re  # noqa: F401
 import io
 import warnings
 
-from pydantic import validate_arguments, ValidationError
+from pydantic import validate_arguments, ValidationError, validate_call
 from typing import overload, Optional, Union, Awaitable
 
 from typing_extensions import Annotated
@@ -52,7 +52,7 @@ class AgentApi:
             api_client = ApiClient.get_default()
         self.api_client = api_client
 
-    @validate_arguments
+    @validate_call
     async def create_agent_task(
         self, task_request_body: Optional[TaskRequestBody] = None, **kwargs
     ) -> Task:  # noqa: E501
@@ -78,7 +78,7 @@ class AgentApi:
             task_request_body, **kwargs
         )  # noqa: E501
 
-    @validate_arguments
+    @validate_call
     async def create_agent_task_with_http_info(
         self, task_request_body: Optional[TaskRequestBody] = None, **kwargs
     ) -> ApiResponse:  # noqa: E501
@@ -190,7 +190,7 @@ class AgentApi:
             _request_auth=_params.get("_request_auth"),
         )
 
-    @validate_arguments
+    @validate_call
     async def download_agent_task_artifact(
         self,
         task_id: Annotated[StrictStr, Field(..., description="ID of the task")],
@@ -221,7 +221,7 @@ class AgentApi:
             task_id, artifact_id, **kwargs
         )  # noqa: E501
 
-    @validate_arguments
+    @validate_call
     async def download_agent_task_artifact_with_http_info(
         self,
         task_id: Annotated[StrictStr, Field(..., description="ID of the task")],
@@ -332,7 +332,7 @@ class AgentApi:
             _request_auth=_params.get("_request_auth"),
         )
 
-    @validate_arguments
+    @validate_call
     async def execute_agent_task_step(
         self,
         task_id: Annotated[StrictStr, Field(..., description="ID of the task")],
@@ -363,7 +363,7 @@ class AgentApi:
             task_id, step_request_body, **kwargs
         )  # noqa: E501
 
-    @validate_arguments
+    @validate_call
     async def execute_agent_task_step_with_http_info(
         self,
         task_id: Annotated[StrictStr, Field(..., description="ID of the task")],
@@ -483,7 +483,7 @@ class AgentApi:
             _request_auth=_params.get("_request_auth"),
         )
 
-    @validate_arguments
+    @validate_call
     async def get_agent_task(
         self,
         task_id: Annotated[StrictStr, Field(..., description="ID of the task")],
@@ -509,7 +509,7 @@ class AgentApi:
             raise ValueError(message)
         return await self.get_agent_task_with_http_info(task_id, **kwargs)  # noqa: E501
 
-    @validate_arguments
+    @validate_call
     async def get_agent_task_with_http_info(
         self,
         task_id: Annotated[StrictStr, Field(..., description="ID of the task")],
@@ -614,7 +614,7 @@ class AgentApi:
             _request_auth=_params.get("_request_auth"),
         )
 
-    @validate_arguments
+    @validate_call
     async def get_agent_task_step(
         self,
         task_id: Annotated[StrictStr, Field(..., description="ID of the task")],
@@ -645,7 +645,7 @@ class AgentApi:
             task_id, step_id, **kwargs
         )  # noqa: E501
 
-    @validate_arguments
+    @validate_call
     async def get_agent_task_step_with_http_info(
         self,
         task_id: Annotated[StrictStr, Field(..., description="ID of the task")],
@@ -756,7 +756,7 @@ class AgentApi:
             _request_auth=_params.get("_request_auth"),
         )
 
-    @validate_arguments
+    @validate_call
     async def list_agent_task_artifacts(
         self,
         task_id: Annotated[StrictStr, Field(..., description="ID of the task")],
@@ -795,7 +795,7 @@ class AgentApi:
             task_id, current_page, page_size, **kwargs
         )  # noqa: E501
 
-    @validate_arguments
+    @validate_call
     async def list_agent_task_artifacts_with_http_info(
         self,
         task_id: Annotated[StrictStr, Field(..., description="ID of the task")],
@@ -917,7 +917,7 @@ class AgentApi:
             _request_auth=_params.get("_request_auth"),
         )
 
-    @validate_arguments
+    @validate_call
     async def list_agent_task_steps(
         self,
         task_id: Annotated[StrictStr, Field(..., description="ID of the task.")],
@@ -956,7 +956,7 @@ class AgentApi:
             task_id, current_page, page_size, **kwargs
         )  # noqa: E501
 
-    @validate_arguments
+    @validate_call
     async def list_agent_task_steps_with_http_info(
         self,
         task_id: Annotated[StrictStr, Field(..., description="ID of the task.")],
@@ -1078,7 +1078,7 @@ class AgentApi:
             _request_auth=_params.get("_request_auth"),
         )
 
-    @validate_arguments
+    @validate_call
     async def list_agent_tasks(
         self,
         current_page: Annotated[
@@ -1114,7 +1114,7 @@ class AgentApi:
             current_page, page_size, **kwargs
         )  # noqa: E501
 
-    @validate_arguments
+    @validate_call
     async def list_agent_tasks_with_http_info(
         self,
         current_page: Annotated[
@@ -1230,7 +1230,7 @@ class AgentApi:
             _request_auth=_params.get("_request_auth"),
         )
 
-    @validate_arguments
+    @validate_call
     async def upload_agent_task_artifacts(
         self,
         task_id: Annotated[StrictStr, Field(..., description="ID of the task")],
@@ -1271,7 +1271,7 @@ class AgentApi:
             task_id, file, relative_path, **kwargs
         )  # noqa: E501
 
-    @validate_arguments
+    @validate_call
     async def upload_agent_task_artifacts_with_http_info(
         self,
         task_id: Annotated[StrictStr, Field(..., description="ID of the task")],
