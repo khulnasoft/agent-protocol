@@ -1,64 +1,26 @@
-import { SDKs } from '@/components/SDKs'
-import { Clients } from '@/components/Clients'
-import { HeroPattern } from '@/components/HeroPattern'
-import Link from 'next/link'
-
 export const metadata = {
-  title: 'Agent Protocol',
-  description:
-    'Agent Protocol - The open source communication protocol for AI agents.',
+  title: 'Why to adopt the protocol?',
+  description: 'The incentives to adopt the protocol',
 }
 
-export const sections = [
-  { title: 'SDKs', id: 'sdks' },
-  { title: 'Clients', id: 'clients' },
-]
+export const sections = []
 
-<HeroPattern />
+# Why to adopt the protocol?
 
-# Agent Protocol
+Using the protocol should have many benefits for you as a developer. Here are some of the most important ones:
 
-The AI agent space is young. Most developers are building agents in their own way. This creates a challenge:
-It's hard to communicate with different agents since the interface is often different every time.
-Because we struggle with communicating with different agents, it's also hard to compare them easily.
-Additionally, if we had a single communication interface with agents, it'd also make it easier developing devtools that works with agents out of the box.
+## Ease with which you can use the benchmarks.
 
-We present the **Agent Protocol** - a single common interface for communicating with agents.
+The protocol is adopted in [benchmarks](https://github.com/khulnasoft/Start-GPT-Benchmarks), a benchmarking tool for [Agent Evals](https://github.com/agbenchmark/agent-evals/tree/main). If your agent uses _Agent Protocol_, you can use very simply test your agent and benchmark it against other agents. This will allow you to see how your agent performs compared to others and how you can improve it.
 
-Any agent developer can implement this protocol.
-The Agent Protocol is an API specification - list of endpoints, which the agent
-should expose with predefined response models.
-The protocol is **tech stack agnostic**. Any agent can adopt this protocol no
-matter what framework they're using (or not using).
+## Other people can more easily use and integrate your agent
 
-We believe, this will help the ecosystem grow faster and simplify the integrations.
+By having the standard protocol, other people can just use their current setup to try your agent. There'll be ready to use SDKs, clients, UIs. Also, this means that you can more easily collaborate with other people, because of the expected structure.
 
-We're starting with a minimal core. We want to build upon that iteratively
-by learning from agent developers about what they actually need.
+## Enable building general devtools (for development, deployment and monitoring) that can be built on top of this protocol
 
-<div className="mb-16 mt-6 flex gap-3">
-  <Button href="/protocol" arrow="right" children="Protocol" />
-  <Button href="/sdks" variant="outline" children="Explore SDKs" />
-  <Button href="https://github.com/AI-Engineer-Foundation/agent-protocol" variant="outline" children="GitHub" />
-</div>
+Similarly, this enables to create tools to develop, deploy and monitor agents without extra configuration or boilerplate.
 
-## High level description {{ anchor: false }}
+## You don’t need to write boilerplate API and you can focus on developing your agent
 
-The Agent Protocol is an API specification - list of endpoints, which the agent should expose with predefined input and response models. The protocol is designed to be as simple as possible, so it can be implemented by any agent. {{ className: 'lead' }}
-
-There are two main endpoints:
-
-- `POST /ap/v1/agent/tasks` - for creating tasks
-- `POST /ap/v1/agent/tasks/{id}/steps` - for triggering next step for the task
-
-To find more details [click here](/protocol).
-
-## Community
-
-If you're interested in the Agent Protocol, come to discuss on <Link href="https://discord.gg/3zcNWTucwn">Discord</Link>.
-
-We're also looking for contributors to help us build the protocol, everyone is welcome to join.
-
-<SDKs />
-
-<Clients />
+Building agents should be about the agent itself, not thinking about how to integrate it with other agents., how to deploy it or how to monitor it. This protocol should help you with that.
