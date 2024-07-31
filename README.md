@@ -99,13 +99,13 @@ If you're an agent developer, you can use the SDK to implement the protocol. You
 ### Engaged projects in development of agent protocol
 
 - [e2b](https://e2b.dev)
-- [Auto-GPT](https://news.agpt.co/)
+- [Start-GPT](https://news-sgpt.khulnasoft.com/)
 
 ### Open-source agents and projects that have adopted Agent Protocol
 
-- ✅ [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT)
-  - Track [PR here](https://github.com/Significant-Gravitas/Auto-GPT/pull/5044)
-- ✅ [Auto-GPT-Forge](https://github.com/Significant-Gravitas/Auto-GPT-Forge)
+- ✅ [Start-GPT](https://github.com/khulnasoft/Start-GPT)
+  - Track [PR here](https://github.com/khulnasoft/Start-GPT/pull/5044)
+- ✅ [Start-GPT-Forge](https://github.com/khulnasoft/Start-GPT-Forge)
 - 🚧 [babyagi](https://github.com/yoheinakajima/babyagi)
   - Track [PR here](https://github.com/yoheinakajima/babyagi/pull/356). Waiting
     for merge.
@@ -128,7 +128,7 @@ If you're an agent developer, you can use the SDK to implement the protocol. You
 
 - PRs and issues are welcome!
 - Join [AIEF Discord](https://discord.gg/TxDzUWab) and their dedicated `agent-protocol` channel
-- Join [Auto-GPT Discord](https://discord.gg/autogpt) and their dedicated
+- Join [Start-GPT Discord](https://discord.gg/startgpt) and their dedicated
   `agent-protocol` channel
 - Join [e2b Discord](https://discord.gg/U7KEcGErtQ) and their dedicated
   `agent-protocol` channel
