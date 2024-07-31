@@ -37,7 +37,7 @@ Made possible by:
 - e2b
 - Allen Helton
 - Postman
-- Auto-GPT
+- Start-GPT
 
 Running the tests, this might take a while. Please wait...
 
